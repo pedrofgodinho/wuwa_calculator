@@ -206,13 +206,13 @@ fn main() {
 
 
     println!();
-    println!("No Defense hit noncrit: {}", stats.expected_skill_hit_noncrit(optimization_target));
-    println!("No Defense hit crit:    {}", stats.expected_skill_hit_crit(optimization_target));
-    println!("No defense average:     {}", stats.expected_skill_hit_average(optimization_target));
+    println!("No Defense hit noncrit: {}", stats.skill_base_damage_noncrit(optimization_target));
+    println!("No Defense hit crit:    {}", stats.skill_base_damage_crit(optimization_target));
+    println!("No defense average:     {}", stats.skill_base_damage_average(optimization_target));
     println!();
     for i in 62..=70 {
-        println!("Lvl {} non-crit: {}", i, stats.enemy_hit_noncrit(optimization_target, 70, i));
-        println!("Lvl {} crit:     {}", i, stats.enemy_hit_crit(optimization_target, 70, i));
+        println!("Lvl {} non-crit: {}", i, stats.skill_adjusted_damage_noncrit(optimization_target, 70, i));
+        println!("Lvl {} crit:     {}", i, stats.skill_adjusted_damage_crit(optimization_target, 70, i));
         println!();
     }
 }

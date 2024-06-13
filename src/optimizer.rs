@@ -20,7 +20,7 @@ pub fn optimize(mut stats: Stats, echoes: &[Echo], target: Target, character_lev
             comb.3.add_to_stats(&mut stats);
             comb.4.add_to_stats(&mut stats);
             
-            let damage = stats.enemy_hit_noncrit(target, character_level, enemy_level);
+            let damage = stats.skill_adjusted_damage_noncrit(target, character_level, enemy_level);
             
             comb.0.remove_from_stats(&mut stats);
             comb.1.remove_from_stats(&mut stats);

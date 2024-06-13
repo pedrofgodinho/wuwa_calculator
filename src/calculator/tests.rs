@@ -118,12 +118,12 @@ fn test_calculate_base_damage_set1() {
         (70, (585.0, 1137.0)),
     ];
 
-    assert!((stats.expected_skill_hit_noncrit(target) - expected_wildlife_dmgs.0).abs() < TOLERANCE);
-    assert!((stats.expected_skill_hit_crit(target) - expected_wildlife_dmgs.1).abs() < TOLERANCE);
+    assert!((stats.skill_base_damage_noncrit(target) - expected_wildlife_dmgs.0).abs() < TOLERANCE);
+    assert!((stats.skill_base_damage_crit(target) - expected_wildlife_dmgs.1).abs() < TOLERANCE);
 
     for (level, expected_dmgs) in expected_dmgs_per_level.iter() {
-        assert!((stats.enemy_hit_noncrit(target, 70, *level) - expected_dmgs.0).abs() < TOLERANCE);
-        assert!((stats.enemy_hit_crit(target, 70, *level) - expected_dmgs.1).abs() < TOLERANCE);
+        assert!((stats.skill_adjusted_damage_noncrit(target, 70, *level) - expected_dmgs.0).abs() < TOLERANCE);
+        assert!((stats.skill_adjusted_damage_crit(target, 70, *level) - expected_dmgs.1).abs() < TOLERANCE);
     }
 }
 
@@ -246,11 +246,11 @@ fn test_calculate_base_damage_set2() {
         (70, (611.0, 1689.0)),
     ];
 
-    assert!((stats.expected_skill_hit_noncrit(target) - expected_wildfile_dmgs.0).abs() < TOLERANCE);
-    assert!((stats.expected_skill_hit_crit(target) - expected_wildfile_dmgs.1).abs() < TOLERANCE);
+    assert!((stats.skill_base_damage_noncrit(target) - expected_wildfile_dmgs.0).abs() < TOLERANCE);
+    assert!((stats.skill_base_damage_crit(target) - expected_wildfile_dmgs.1).abs() < TOLERANCE);
 
     for (level, expected_dmgs) in expected_dmgs_per_level.iter() {
-        assert!((stats.enemy_hit_noncrit(target, 70, *level) - expected_dmgs.0).abs() < TOLERANCE);
-        assert!((stats.enemy_hit_crit(target, 70, *level) - expected_dmgs.1).abs() < TOLERANCE);
+        assert!((stats.skill_adjusted_damage_noncrit(target, 70, *level) - expected_dmgs.0).abs() < TOLERANCE);
+        assert!((stats.skill_adjusted_damage_crit(target, 70, *level) - expected_dmgs.1).abs() < TOLERANCE);
     }
 }

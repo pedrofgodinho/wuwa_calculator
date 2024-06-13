@@ -3,13 +3,7 @@ use crate::{Element, SkillType};
 #[cfg(test)]
 mod tests;
 
-#[derive(Clone, Copy)]
-pub struct BaseStats {
-    pub hp: f64,
-    pub atk: f64,
-    pub def: f64,
-}
-
+/// The `Target` struct holds all the information about an attack needed to calculate its damage
 #[derive(Clone, Copy)]
 pub struct Target {
     pub element: Element,
@@ -18,7 +12,16 @@ pub struct Target {
     pub skill_scaling_bonus: f64,
 }
 
-#[derive(Clone)] // probably not deriving copy because it's a very large struct?
+/// The `BaseStats` struct holds the base stats of a character, which are used to initialize the `Stats` struct
+#[derive(Clone, Copy)]
+pub struct BaseStats {
+    pub hp: f64,
+    pub atk: f64,
+    pub def: f64,
+}
+
+/// The `Stats` struct holds all the stats of a character
+#[derive(Clone, PartialEq, Debug)] // probably not deriving copy because it's a very large struct?
 pub struct Stats {
     pub base_atk: f64,
     pub base_hp: f64,
@@ -45,6 +48,15 @@ pub struct Stats {
 }
 
 impl Stats {
+    /// Creates a new `Stats` struct from a `BaseStats` struct
+    /// 
+    /// # Examples
+    /// ```
+    /// use wuwa_calculator::calculator::{BaseStats, Stats};
+    /// 
+    /// let jiyan_base_stats = BaseStats {hp: 7954.0, atk: 343.0, def: 899.0};
+    /// let stats = Stats::new_from_base(jiyan_base_stats);
+    /// ```
     pub fn new_from_base(base: BaseStats) -> Stats {
         Stats {
             base_atk: base.atk,
@@ -71,14 +83,17 @@ impl Stats {
         }
     }
 
+    /// Returns the HP of the character
     pub fn hp(&self) -> f64 {
         self.base_hp * self.hp_mult + self.hp_flat
     }
 
+    /// Returns the ATK of the character
     pub fn atk(&self) -> f64 {
         self.base_atk * self.atk_mult + self.atk_flat
     }
 
+    /// Returns the DEF of the character
     pub fn def(&self) -> f64 { // TODO fix this
         self.base_def * self.def_mult + self.def_flat
     }
@@ -95,17 +110,20 @@ impl Stats {
         self.atk() * (1.0 + self.crit_rate * (self.crit_dmg - 1.0))
     }
 
-    pub fn expected_skill_hit_noncrit(&self, target: Target) -> f64 {
+    /// Returns the base damage of a skill (when it does not crit) without taking into account the enemy's resistance
+    pub fn skill_base_damage_noncrit(&self, target: Target) -> f64 {
         target.skill_multiplier * target.skill_scaling_bonus * self.hit_multiplier_noncrit()
             * (1.0 + self.element_dmg[target.element as usize] + self.skill_dmg[target.skill_type as usize])
     }
 
-    pub fn expected_skill_hit_crit(&self, target: Target) -> f64 {
+    /// Returns the base damage of a skill (when it crits) without taking into account the enemy's resistance
+    pub fn skill_base_damage_crit(&self, target: Target) -> f64 {
         target.skill_multiplier * target.skill_scaling_bonus * self.hit_multiplier_crit()
             * (1.0 + self.element_dmg[target.element as usize] + self.skill_dmg[target.skill_type as usize])
     }
 
-    pub fn expected_skill_hit_average(&self, target: Target) -> f64 {
+    /// Returns the base damage of a skill (averaging crit and noncrit) without taking into account the enemy's resistance
+    pub fn skill_base_damage_average(&self, target: Target) -> f64 {
         target.skill_multiplier * target.skill_scaling_bonus * self.hit_multiplier_average()
             * (1.0 + self.element_dmg[target.element as usize] + self.skill_dmg[target.skill_type as usize])
     }
@@ -130,17 +148,22 @@ impl Stats {
 
         res_adjusted * ele_res * def_mult * dmg_reduction
     }
+    
+    // TODO take in enemy resistance as an argument
 
-    pub fn enemy_hit_noncrit(&self, target: Target, character_level: isize, enemy_level: isize) -> f64 {
-        self.expected_skill_hit_noncrit(target) * self.enemy_resistance(character_level, enemy_level)
+    /// Returns the adjusted damage of a skill (when it does not crit) taking into account the enemy's resistance
+    pub fn skill_adjusted_damage_noncrit(&self, target: Target, character_level: isize, enemy_level: isize) -> f64 {
+        self.skill_base_damage_noncrit(target) * self.enemy_resistance(character_level, enemy_level)
     }
 
-    pub fn enemy_hit_crit(&self, target: Target, character_level: isize, enemy_level: isize) -> f64 {
-        self.expected_skill_hit_crit(target) * self.enemy_resistance(character_level, enemy_level)
+    /// Returns the adjusted damage of a skill (when it crits) taking into account the enemy's resistance
+    pub fn skill_adjusted_damage_crit(&self, target: Target, character_level: isize, enemy_level: isize) -> f64 {
+        self.skill_base_damage_crit(target) * self.enemy_resistance(character_level, enemy_level)
     }
 
-    pub fn enemy_hit_average(&self, target: Target, character_level: isize, enemy_level: isize) -> f64 {
-        self.expected_skill_hit_average(target) * self.enemy_resistance(character_level, enemy_level)
+    /// Returns the adjusted damage of a skill (averaging crit and noncrit) taking into account the enemy's resistance
+    pub fn skill_adjusted_damage_average(&self, target: Target, character_level: isize, enemy_level: isize) -> f64 {
+        self.skill_base_damage_average(target) * self.enemy_resistance(character_level, enemy_level)
     }
 }
 

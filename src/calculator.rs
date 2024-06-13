@@ -84,7 +84,7 @@ impl Stats {
     }
 
     fn hit_multiplier_average(&self) -> f64 { // TODO deepen
-        self.atk() * (1.0 + self.crit_rate * self.crit_dmg)
+        self.atk() * (1.0 + self.crit_rate * (self.crit_dmg - 1.0))
     }
 
     pub fn expected_skill_hit_noncrit(&self, target: Target) -> f64 {

@@ -1,5 +1,8 @@
 use crate::{Element, SkillType};
 
+#[cfg(test)]
+mod tests;
+
 #[derive(Clone, Copy)]
 pub struct BaseStats {
     pub hp: f64,
@@ -18,6 +21,8 @@ pub struct Target {
 #[derive(Clone)] // probably not deriving copy because it's a very large struct?
 pub struct Stats {
     pub base_atk: f64,
+    pub base_hp: f64,
+    pub base_def: f64,
 
     // Base Stats
     pub hp_flat: f64,
@@ -43,10 +48,12 @@ impl Stats {
     pub fn new_from_base(base: BaseStats) -> Stats {
         Stats {
             base_atk: base.atk,
+            base_hp: base.hp,
+            base_def: base.def,
 
-            hp_flat: base.hp,
+            hp_flat: 0.0,
             atk_flat: 0.0,
-            def_flat: base.def,
+            def_flat: 0.0,
 
             hp_mult: 1.0,
             atk_mult: 1.0,
@@ -65,7 +72,7 @@ impl Stats {
     }
 
     pub fn hp(&self) -> f64 {
-        self.hp_flat * self.hp_mult
+        self.base_hp * self.hp_mult + self.hp_flat
     }
 
     pub fn atk(&self) -> f64 {
@@ -73,7 +80,7 @@ impl Stats {
     }
 
     pub fn def(&self) -> f64 { // TODO fix this
-        self.def_flat * self.def_mult
+        self.base_def * self.def_mult + self.def_flat
     }
 
     fn hit_multiplier_noncrit(&self) -> f64 { // TODO deepen

@@ -4,7 +4,7 @@ use wuwa_calculator::echo::{Echo, StatType};
 use wuwa_calculator::optimizer::optimize;
 
 fn main() {
-    let mut stats = Stats::new_from_base(BaseStats {hp: 7955.23, atk: 344.05, def: 900.28});
+    let mut stats = Stats::new_from_base(BaseStats {hp: 7954.0, atk: 343.0, def: 899.0});
     
     let echoes = [
         Echo { // Bad artifact, should not be picked
@@ -171,7 +171,6 @@ fn main() {
     };
     
     let echoes = optimize(stats.clone(), &echoes, optimization_target, 70, 70);
-    
     echoes[0].add_to_stats(&mut stats);
     echoes[1].add_to_stats(&mut stats);
     echoes[2].add_to_stats(&mut stats);

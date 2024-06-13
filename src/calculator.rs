@@ -108,14 +108,19 @@ impl Stats {
         let ele_res = 1.0; // TODO
         let dmg_reduction = 1.0; // TODO
 
-        let base_res = 0.9;
+        let base_res = 0.1;
         let res_total = base_res + res_pen;
+        let res_adjusted = match res_total {
+            ..= 0.0 => 1.0 - res_total/2.0,
+            0.0 ..= 0.8 => 1.0 - res_total,
+            _ => 1.0 / (1.0 + 5.0 * res_total)
+        };
 
         let enemy_def = 8.0 * enemy_level as f64 + 792.0;
         let character_level_part = 800.0 + 8.0 * character_level as f64;
         let def_mult = character_level_part / (character_level_part + enemy_def * (1.0 - def_ignore));
 
-        res_total * ele_res * def_mult * dmg_reduction
+        res_adjusted * ele_res * def_mult * dmg_reduction
     }
 
     pub fn enemy_hit_noncrit(&self, target: Target, character_level: isize, enemy_level: isize) -> f64 {

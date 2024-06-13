@@ -1,5 +1,6 @@
 use crate::calculator::Stats;
 
+#[derive(Copy, Clone)]
 pub enum StatType {
     // Main Stats
     AtkFlat,
@@ -93,12 +94,14 @@ impl StatType {
     }
 }
 
+#[derive(Copy, Clone)]
 pub struct Echo {
+    pub cost: isize,
     pub main_stat_type: StatType,
     pub main_stat_value: f64,
     pub secondary_stat_type: StatType,
     pub secondary_stat_value: f64,
-    pub sub_stats: Vec<(StatType, f64)>,
+    pub sub_stats: [(StatType, f64); 5],
 }
 
 impl Echo {

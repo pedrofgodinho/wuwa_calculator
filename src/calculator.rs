@@ -15,6 +15,7 @@ pub struct Target {
     pub skill_scaling_bonus: f64,
 }
 
+#[derive(Clone)] // probably not deriving copy because it's a very large struct?
 pub struct Stats {
     pub base_atk: f64,
 

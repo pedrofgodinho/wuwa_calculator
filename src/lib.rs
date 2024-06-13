@@ -1,6 +1,7 @@
 
 pub mod calculator;
 pub mod echo;
+pub mod optimizer;
 
 #[derive(Clone, Copy)]
 pub enum Element {
